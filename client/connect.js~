@@ -40,7 +40,7 @@ Connect.prototype.initSocket = function() {
 				context.drawImage(imageObj,0,0,context.width,context.height);
 			}
 	*/		// 2. method: draw as CSS background
-			 $('#please').attr('src', 'data:image/jpg;base64,' + data);
+			 $('#videostream').css('background', 'transparent url(data:image/jpeg;base64,'+data+') top left / 100% 100% no-repeat');
 		} catch(e){ }
 	});
 

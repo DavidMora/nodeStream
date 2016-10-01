@@ -1,5 +1,5 @@
 //--
-var nxserver = new NXServer('/home/gerald/prog/nodeStream', 8080, '127.0.0.1', 1234);
+var nxserver = new NXServer('/home/root/ffmpeg/server/gerardo/nodeStream', 8080, '0.0.0.0', 1234);
 
 // --
 // start node server
@@ -15,25 +15,31 @@ function NXServer(httpUIDir, httpPort, streamIP, streamPort) {
 		serveStatic = require('serve-static'),
 		//app = connect().use(connect(this.httpUIDir)).listen(this.httpPort),   //running from http://
 		app = connect().use(serveStatic(this.httpUIDir)).listen(this.httpPort),    //running from file:///
-		io = require('socket.io').listen(app);
-
+		io = require('socket.io').listen(app),
+		MjpegCamera = require('mjpeg-camera');
 	console.log("http server on "+this.httpPort);
 	console.log("running on "+this.httpUIDir);
 
 	// get stream and send to canvas
 	// way for linux
-	var ffmpeg = require('child_process').spawn("ffmpeg", [
-		"-re", 
-		"-y", 
+	/*var ffmpeg = require('child_process').spawn("/home/root/ffmpeg/server/gerardo/nodeStream/server/ffmpeg", [
+		//"-re", 
+		"-y",
+	        "-r",
+	        "15",	
 		"-i", 
-		"udp://"+this.streamIP+":"+this.streamPort, 
-		"-preset", 
-		"ultrafast", 
+		"rtsp://admin:insite1234@192.168.1.31:554/Streaming/Channels/2", 
+		//"-preset", 
+		//"ultrafast",
+	        "-b","1024k",	       	
+	"-s", "320x240",
+        "-threads","2",	
 		"-f", 
 		"mjpeg", 
 		"pipe:1"
 		]);
-
+        */
+       var ffmpeg = new MjpegCamera({name:"test", url:"http://admin:insite1234@192.168.1.31/Streaming/Channels/102/httppreview"});
 	// way for windows?
 	//  var ffmpeg = require('child_process').spawn("ffmpeg", [
 	//    "-y", 
@@ -56,7 +62,7 @@ function NXServer(httpUIDir, httpPort, streamIP, streamPort) {
 		throw err;
 	});
 
-	ffmpeg.on('close', function (code) {
+	/*ffmpeg.on('close', function (code) {
 		console.log('ffmpeg exited with code ' + code);
 	});
 
@@ -83,5 +89,9 @@ function NXServer(httpUIDir, httpPort, streamIP, streamPort) {
 
 		var frame = new Buffer(data).toString('base64');
 		io.sockets.emit('canvas',frame);
-	});
+	});*/
+	ffmpeg.on('data',function(data){
+		//console.log(data.data.toString('base64'));
+		io.emit('canvas', data.data.toString('base64'))});
+	ffmpeg.start();
 }

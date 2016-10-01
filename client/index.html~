@@ -11,8 +11,8 @@
 	<body>
 		<div id="stream-container">
 			
-			<!--canvas id="videostream" width="320" height="288" style="border:solid;"></canvas-->
-			<img id="please" width="320" height="240" style="border:solid;"/>
+			<canvas id="videostream" width="320" height="288" style="border:solid;"></canvas>
+
 		</div>
 	</body>
 </html>

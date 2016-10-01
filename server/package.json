@@ -5,7 +5,8 @@
   "dependencies": {
 	"connect": ">= 0.1",
 	"socket.io": ">= 0.1",
-	"serve-static": ">= 0.1"
+	"serve-static": ">= 0.1",
+	"mjpeg-camera": ">= 0.0"
   },
   "engine": "node >= 0.10.0"
 }
